@@ -57,6 +57,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Custom theme colors - monochromatic palette based on #212529
+        'theme-dark': '#212529',
+        'theme-dark-gray': '#1a1d21',
+        'theme-light': '#f8f9fa',
+        'theme-warm': '#6c757d',
+        'theme-brown': '#495057',
       },
       borderRadius: {
         lg: "var(--radius)",

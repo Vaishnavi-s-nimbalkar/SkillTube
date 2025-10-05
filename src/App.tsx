@@ -61,7 +61,7 @@ const App: React.FC = () => {
     </TooltipProvider>
   </QueryClientProvider>
 
-      <h1 className="text-white">Welcome to StreamX 🎬</h1>
+      
     </div>
   );
 };
