@@ -30,7 +30,7 @@ const Navbar = () => {
             <div className="p-2 rounded-lg bg-gradient-to-r from-primary to-accent">
               <Video className="h-6 w-6 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold gradient-text">StreamLearn</span>
+            <span className="text-xl font-bold gradient-text">SkillTube</span>
           </Link>
 
           <div className="flex items-center space-x-4">

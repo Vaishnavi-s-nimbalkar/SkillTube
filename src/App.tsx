@@ -17,8 +17,28 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+import React, { useState, useEffect } from "react";
+import FuturisticLoader from "../src/components/Loader"; // adjust path
+
+const App: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // simulate loading (e.g., fetching initial data)
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 3 seconds
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <FuturisticLoader />;
+  }
+
+  return (
+    <div>
+      {/* Your actual app UI */}
+<QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -40,6 +60,10 @@ const App = () => (
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
-);
+
+      <h1 className="text-white">Welcome to StreamX 🎬</h1>
+    </div>
+  );
+};
 
 export default App;

@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { Video } from 'lucide-react';
+import { Video, Eye, EyeOff } from 'lucide-react';
 import { z } from 'zod';
 
 const authSchema = z.object({
@@ -21,6 +21,7 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { signUp, signIn, user } = useAuth();
   const navigate = useNavigate();
 
@@ -50,7 +51,7 @@ const Auth = () => {
             toast.error(error.message);
           }
         } else {
-          toast.success('Account created successfully!');
+          toast.success('Account created. A confirmation email has been sent — please confirm your email via the link we sent, then sign in.');
           navigate('/');
         }
       } else {
@@ -121,15 +122,25 @@ const Auth = () => {
 
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              className="bg-secondary/50"
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="bg-secondary/50 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((s) => !s)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
+            </div>
           </div>
 
           <Button 

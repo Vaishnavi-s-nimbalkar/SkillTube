@@ -10,6 +10,16 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Award, Loader2 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { useCallback } from 'react';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -19,6 +29,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [upgrading, setUpgrading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -45,8 +56,8 @@ const Profile = () => {
     setLoading(false);
   };
 
-  const handleSave = async () => {
-    if (!user) return;
+  const handleSave = useCallback(async () => {
+    if (!user) return false;
     setSaving(true);
 
     const { error } = await supabase
@@ -56,11 +67,14 @@ const Profile = () => {
 
     if (error) {
       toast.error('Failed to update profile');
+      setSaving(false);
+      return false;
     } else {
       toast.success('Profile updated successfully!');
+      setSaving(false);
+      return true;
     }
-    setSaving(false);
-  };
+  }, [user, fullName]);
 
   const handleUpgradeToTeacher = async () => {
     if (!user) return;
@@ -104,37 +118,72 @@ const Profile = () => {
 
           <Card className="glass-card p-6 mb-6">
             <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={user?.email || ''}
-                  disabled
-                  className="bg-secondary/50"
-                />
+              <div>
+                <Label>Email</Label>
+                <div className="mt-2 text-sm text-foreground">{user?.email || '—'}</div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input
-                  id="fullName"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="bg-secondary/50"
-                />
+              <div>
+                <Label>Full Name</Label>
+                <div className="mt-2 text-sm text-foreground">{fullName || '—'}</div>
               </div>
 
-              <Button 
-                onClick={handleSave}
-                disabled={saving}
-                className="btn-gradient"
-              >
-                {saving ? 'Saving...' : 'Save Changes'}
-              </Button>
+              <div>
+                <Button onClick={() => setIsDialogOpen(true)} className="btn-gradient">
+                  Edit Profile
+                </Button>
+              </div>
             </div>
           </Card>
+
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit Profile</DialogTitle>
+                <DialogDescription>Update your personal details below and save the changes.</DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4 mt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input id="email" type="email" value={user?.email || ''} disabled className="bg-secondary/50" />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Full Name</Label>
+                  <Input
+                    id="fullName"
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="bg-secondary/50"
+                  />
+                </div>
+              </div>
+
+              <DialogFooter className="mt-6">
+                <DialogClose asChild>
+                  <Button variant="ghost" onClick={() => setIsDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                </DialogClose>
+
+                <Button
+                  onClick={async () => {
+                    const ok = await handleSave();
+                    if (ok) {
+                      setIsDialogOpen(false);
+                      fetchProfile();
+                    }
+                  }}
+                  disabled={saving}
+                  className="btn-gradient"
+                >
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
           {!isTeacher && (
             <Card className="glass-card p-6 border-primary/50">
