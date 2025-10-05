@@ -5,12 +5,18 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -19,8 +25,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
--        run: npm ci
-+        run: npm install
+        run: npm ci
 
       - name: Build (uses repo secrets for Vite env)
         env:
@@ -29,8 +34,7 @@ jobs:
         run: npm run build
 
       - name: Ensure SPA fallback (404 -> index)
-        run: |
-          cp dist/index.html dist/404.html || true
+        run: cp dist/index.html dist/404.html || true
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
