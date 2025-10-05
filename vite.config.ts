@@ -5,6 +5,8 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  // <-- add base so production build uses relative paths (works on gh-pages)
+  base: mode === "development" ? "/" : "./",
   server: {
     host: "::",
     port: 8080,
