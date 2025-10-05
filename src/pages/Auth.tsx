@@ -85,7 +85,7 @@ const Auth = () => {
           <div className="p-3 rounded-xl bg-gradient-to-r from-primary to-accent mb-4">
             <Video className="h-8 w-8 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold gradient-text">StreamLearn</h1>
+          <h1 className="text-3xl font-bold gradient-text">SkillTube</h1>
           <p className="text-muted-foreground mt-2">
             {isSignUp ? 'Create your account' : 'Welcome back'}
           </p>
